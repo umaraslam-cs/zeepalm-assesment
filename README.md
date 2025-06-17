@@ -4,7 +4,7 @@
 ![Web Demo](https://raw.githubusercontent.com/umaraslam-cs/zeepalm-assesment/main/web-demo.gif)
 
 ### Mobile Demo GIF
-![Mobile Demo](https://raw.githubusercontent.com/umaraslam-cs/zeepalm-assesment/main/mobile-demo.gif)
+<img src="https://raw.githubusercontent.com/umaraslam-cs/zeepalm-assesment/main/mobile-demo.gif" width="300"/>
 
 A cross-platform (Web, Android, iOS) Flutter application for video sharing, featuring login, signup, video feed, and video upload functionalities.
 
