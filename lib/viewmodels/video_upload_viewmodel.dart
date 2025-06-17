@@ -22,17 +22,35 @@ class VideoUploadViewModel extends ChangeNotifier {
   }
 
   Future<void> uploadVideo(String videoUrl, String caption) async {
+    if (_isUploading) return; // Prevent multiple uploads
+
     _isUploading = true;
     _uploadProgress = 0.0;
     _error = null;
     notifyListeners();
 
     try {
-      await FirebaseFirestore.instance.collection('videos').add({
+      // Check if video with same URL already exists
+      final existingVideos =
+          await FirebaseFirestore.instance.collection('videos').where('url', isEqualTo: videoUrl).get();
+
+      if (existingVideos.docs.isNotEmpty) {
+        _error = 'This video has already been uploaded';
+        _isUploading = false;
+        notifyListeners();
+        return;
+      }
+
+      // Add new video with server timestamp
+      final docRef = await FirebaseFirestore.instance.collection('videos').add({
         'url': videoUrl,
         'caption': caption,
         'createdAt': FieldValue.serverTimestamp(),
+        'userId': FirebaseFirestore.instance.collection('users').doc().id, // Add user reference if needed
       });
+
+      // Wait for the document to be created
+      await docRef.get();
 
       _isUploading = false;
       notifyListeners();

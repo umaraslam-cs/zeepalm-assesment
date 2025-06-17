@@ -19,19 +19,24 @@ class _VideoFeedScreenState extends State<VideoFeedScreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() => Provider.of<VideoFeedViewModel>(context, listen: false).fetchVideos());
+    // Fetch videos after the first frame is rendered
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        context.read<VideoFeedViewModel>().fetchVideos();
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.pushNamed(context, AppRoutes.videoUpload).then((value) {
-            if (value == true && context.mounted) {
-              Provider.of<VideoFeedViewModel>(context, listen: false).fetchVideos();
-            }
-          });
+        onPressed: () async {
+          final result = await Navigator.pushNamed(context, AppRoutes.videoUpload);
+          if (result == true && mounted) {
+            // Refresh videos after successful upload
+            await context.read<VideoFeedViewModel>().fetchVideos();
+          }
         },
         tooltip: 'Upload Video',
         child: const Icon(Icons.upload),
@@ -57,16 +62,29 @@ class _VideoFeedScreenState extends State<VideoFeedScreen> {
               ),
               child: Consumer<VideoFeedViewModel>(
                 builder: (context, viewModel, _) {
-                  return ListView.builder(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    itemCount: viewModel.videos.length,
-                    itemBuilder: (context, index) {
-                      final video = viewModel.videos[index];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                        child: VideoCard(video: video),
-                      );
-                    },
+                  if (viewModel.isLoading && viewModel.videos.isEmpty) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  if (viewModel.videos.isEmpty) {
+                    return const Center(
+                      child: Text('No videos available. Upload one!'),
+                    );
+                  }
+
+                  return RefreshIndicator(
+                    onRefresh: () => viewModel.fetchVideos(),
+                    child: ListView.builder(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      itemCount: viewModel.videos.length,
+                      itemBuilder: (context, index) {
+                        final video = viewModel.videos[index];
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          child: VideoCard(video: video),
+                        );
+                      },
+                    ),
                   );
                 },
               ),

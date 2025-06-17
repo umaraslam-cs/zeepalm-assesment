@@ -63,14 +63,19 @@ class _VideoUploadScreenState extends State<VideoUploadScreen> {
                             padding: const EdgeInsets.only(top: 8.0),
                             child: Text(viewModel.error!, style: const TextStyle(color: Colors.red)),
                           ),
+                        const SizedBox(height: 16),
                         ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue,
+                            foregroundColor: Colors.white,
+                          ),
                           onPressed: viewModel.isUploading
                               ? null
                               : () async {
-                                  if (_videoLinkController.text.isNotEmpty) {
+                                  if (_videoLinkController.text.isNotEmpty && _captionController.text.isNotEmpty) {
                                     await viewModel.uploadVideo(_videoLinkController.text, _captionController.text);
                                     if (viewModel.error == null) {
-                                      if (mounted) {
+                                      if (context.mounted) {
                                         ScaffoldMessenger.of(context).showSnackBar(
                                           const SnackBar(content: Text('Upload complete!')),
                                         );

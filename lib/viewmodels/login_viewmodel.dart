@@ -2,13 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../routes/app_routes.dart';
 
 class LoginViewModel extends ChangeNotifier {
   bool isLoading = false;
   String? errorMessage;
 
-  Future<void> login(String email, String password, BuildContext context) async {
+  Future<bool> login(String email, String password, BuildContext context) async {
     isLoading = true;
     errorMessage = null;
     notifyListeners();
@@ -19,7 +18,7 @@ class LoginViewModel extends ChangeNotifier {
       );
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('is_logged_in', true);
-      Navigator.pushReplacementNamed(context, AppRoutes.videoFeed);
+      return true;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         errorMessage = 'No user found for that email.';
@@ -34,5 +33,6 @@ class LoginViewModel extends ChangeNotifier {
       isLoading = false;
       notifyListeners();
     }
+    return false;
   }
 }

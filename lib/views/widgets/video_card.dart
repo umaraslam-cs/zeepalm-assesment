@@ -15,7 +15,6 @@ class VideoCard extends StatefulWidget {
 
 class _VideoCardState extends State<VideoCard> {
   late VideoPlayerController _controller;
-  final bool _isDownloading = false;
 
   @override
   void initState() {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart';
 
+import '../../routes/app_routes.dart';
 import '../../viewmodels/signup_viewmodel.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -85,14 +86,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         SizedBox(
                           height: 48,
                           child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue,
+                              foregroundColor: Colors.white,
+                            ),
                             onPressed: viewModel.isLoading
                                 ? null
-                                : () {
-                                    viewModel.signUp(
+                                : () async {
+                                    final result = await viewModel.signUp(
                                       emailController.text.trim(),
                                       passwordController.text.trim(),
                                       context,
                                     );
+                                    if (result && context.mounted) {
+                                      Navigator.pushReplacementNamed(context, AppRoutes.videoFeed);
+                                    }
                                   },
                             child: viewModel.isLoading
                                 ? const SizedBox(

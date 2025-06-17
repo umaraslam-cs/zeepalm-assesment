@@ -2,13 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../routes/app_routes.dart';
 
 class SignUpViewModel extends ChangeNotifier {
   bool isLoading = false;
   String? errorMessage;
 
-  Future<void> signUp(String email, String password, BuildContext context) async {
+  Future<bool> signUp(String email, String password, BuildContext context) async {
     isLoading = true;
     errorMessage = null;
     notifyListeners();
@@ -19,7 +18,7 @@ class SignUpViewModel extends ChangeNotifier {
       );
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('is_logged_in', true);
-      Navigator.pushReplacementNamed(context, AppRoutes.videoFeed);
+      return true;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
         errorMessage = 'The account already exists for that email.';
@@ -36,5 +35,6 @@ class SignUpViewModel extends ChangeNotifier {
       isLoading = false;
       notifyListeners();
     }
+    return false;
   }
 }

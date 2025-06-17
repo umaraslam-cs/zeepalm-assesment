@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../routes/app_routes.dart';
 import '../../viewmodels/login_viewmodel.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -85,14 +86,21 @@ class _LoginScreenState extends State<LoginScreen> {
                         SizedBox(
                           height: 48,
                           child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue,
+                              foregroundColor: Colors.white,
+                            ),
                             onPressed: viewModel.isLoading
                                 ? null
-                                : () {
-                                    viewModel.login(
+                                : () async {
+                                    final result = await viewModel.login(
                                       emailController.text.trim(),
                                       passwordController.text.trim(),
                                       context,
                                     );
+                                    if (result && context.mounted) {
+                                      Navigator.pushReplacementNamed(context, AppRoutes.videoFeed);
+                                    }
                                   },
                             child: viewModel.isLoading
                                 ? const SizedBox(

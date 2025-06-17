@@ -1,0 +1,2 @@
+/Users/umaraslam/Work/Personal/zeepalm_assesment/android/app/.cxx/RelWithDebInfo/425p13v6/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Users/umaraslam/Work/Personal/zeepalm_assesment/android/app/.cxx/RelWithDebInfo/425p13v6/armeabi-v7a/CMakeFiles/rebuild_cache.dir
