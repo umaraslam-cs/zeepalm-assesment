@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "964216613153",
+    "project_id": "zeepalm-assesment-44128",
+    "storage_bucket": "zeepalm-assesment-44128.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:964216613153:android:017fa20d36a033145f7660",
+        "android_client_info": {
+          "package_name": "com.zeepalm.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhFsxuDr7amqzrEyEZLw_lHaXsE-cAEzE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
