@@ -1,6 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
+
+     <!-- Inside <head> -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyBgOHARjKzbWpMf3YirCGAn3bgmhSspPas",
+  authDomain: "zeepalm-assesment-44128.firebaseapp.com",
+  projectId: "zeepalm-assesment-44128",
+  storageBucket: "zeepalm-assesment-44128.firebasestorage.app",
+  messagingSenderId: "964216613153",
+  appId: "1:964216613153:web:f2fa7644c20a2e235f7660",
+  measurementId: "G-HE6KWTX2J6"
+};
+  firebase.initializeApp(firebaseConfig);
+</script>
+
   <!--
     If you are serving your web app in a path other than the root, change the
     href value below to reflect the base path you are serving from.

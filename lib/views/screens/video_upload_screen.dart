@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -13,12 +12,13 @@ class VideoUploadScreen extends StatefulWidget {
 }
 
 class _VideoUploadScreenState extends State<VideoUploadScreen> {
-  File? _selectedFile;
   final _captionController = TextEditingController();
+  final _videoLinkController = TextEditingController();
 
   @override
   void dispose() {
     _captionController.dispose();
+    _videoLinkController.dispose();
     super.dispose();
   }
 
@@ -28,62 +28,67 @@ class _VideoUploadScreenState extends State<VideoUploadScreen> {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Upload Video')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            ElevatedButton(
-              onPressed: viewModel.isUploading
-                  ? null
-                  : () async {
-                      final file = await viewModel.pickVideo();
-                      if (file != null) {
-                        setState(() {
-                          _selectedFile = file;
-                        });
-                      }
-                    },
-              child: Text(_selectedFile == null ? 'Select Video' : 'Change Video'),
-            ),
-            if (_selectedFile != null) ...[
-              const SizedBox(height: 16),
-              TextField(
-                controller: _captionController,
-                decoration: const InputDecoration(labelText: 'Caption'),
-                enabled: !viewModel.isUploading,
-              ),
-              const SizedBox(height: 16),
-              if (viewModel.isUploading) LinearProgressIndicator(value: viewModel.uploadProgress),
-              if (viewModel.error != null)
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Text(viewModel.error!, style: const TextStyle(color: Colors.red)),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final isWide = kIsWeb && constraints.maxWidth > 600;
+          return Center(
+            child: SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: isWide ? 400 : double.infinity,
                 ),
-              ElevatedButton(
-                onPressed: viewModel.isUploading
-                    ? null
-                    : () async {
-                        if (_selectedFile != null && _captionController.text.isNotEmpty) {
-                          await viewModel.uploadVideo(_selectedFile!, _captionController.text);
-                          if (viewModel.error == null) {
-                            if (mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Upload complete!')),
-                              );
-                              setState(() {
-                                _selectedFile = null;
-                                _captionController.clear();
-                              });
-                            }
-                          }
-                        }
-                      },
-                child: const Text('Upload'),
+                child: Card(
+                  elevation: isWide ? 8 : 0,
+                  shape: isWide ? RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)) : null,
+                  child: Padding(
+                    padding: EdgeInsets.all(isWide ? 32 : 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        TextField(
+                          controller: _videoLinkController,
+                          decoration: const InputDecoration(labelText: 'Video Link'),
+                          enabled: !viewModel.isUploading,
+                        ),
+                        const SizedBox(height: 16),
+                        TextField(
+                          controller: _captionController,
+                          decoration: const InputDecoration(labelText: 'Caption'),
+                          enabled: !viewModel.isUploading,
+                        ),
+                        const SizedBox(height: 16),
+                        if (viewModel.isUploading) LinearProgressIndicator(value: viewModel.uploadProgress),
+                        if (viewModel.error != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Text(viewModel.error!, style: const TextStyle(color: Colors.red)),
+                          ),
+                        ElevatedButton(
+                          onPressed: viewModel.isUploading
+                              ? null
+                              : () async {
+                                  if (_videoLinkController.text.isNotEmpty) {
+                                    await viewModel.uploadVideo(_videoLinkController.text, _captionController.text);
+                                    if (viewModel.error == null) {
+                                      if (mounted) {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          const SnackBar(content: Text('Upload complete!')),
+                                        );
+                                        Navigator.pop(context, true);
+                                      }
+                                    }
+                                  }
+                                },
+                          child: const Text('Upload'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
-            ],
-          ],
-        ),
+            ),
+          );
+        },
       ),
     );
   }
