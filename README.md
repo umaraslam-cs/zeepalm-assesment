@@ -1,5 +1,7 @@
 # ZeePalm Assessment
 
+# Web Demo GIF
+
 ![Web Demo](https://raw.githubusercontent.com/umaraslam-cs/zeepalm-assesment/main/web-demo.gif)
 
 A cross-platform (Web, Android, iOS) Flutter application for video sharing, featuring login, signup, video feed, and video upload functionalities.
